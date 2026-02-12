@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Axeon | Creative Intelligence & Marketing</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+       :root {
+    --bg-dark: #050b1e;
+    --bg-light: #e9eefb;
+
+    /* NAVY BLUE SYSTEM */
+    --accent: #1e3a8a;        /* navy */
+    --accent-soft: #2563eb;  /* electric blue */
+    --accent-glow: rgba(37, 99, 235, 0.25);
+
+    --text-white: #ffffff;
+    --text-dark: #0a1025;
+
+    --glass-white: rgba(255, 255, 255, 0.06);
+    --glass-dark: rgba(0, 0, 0, 0.06);
+}
+
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+        html.lenis { height: auto; }
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+        .lenis.lenis-stopped { overflow: hidden; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- STICKY NAV --- */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translate3d(-50%,0,0);
+            will-change: transform;
+            width: 90%;
+            max-width: 1200px;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: var(--glass-white);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 100px;
+        }
+
+        .logo { font-family: 'Playfair Display'; font-size: 1.5rem; font-weight: 700; cursor: pointer; }
+        nav a { text-decoration: none; color: inherit; margin: 0 15px; font-size: 0.85rem; font-weight: 500; opacity: 0.6; transition: 0.3s ease; }
+        nav a:hover { opacity: 1; color: var(--accent); }
+
+        .btn-cta {
+            background: var(--text-white);
+            color: black;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* --- SECTIONS --- */
+        section { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 5vw; text-align: center; position: relative; }
+
+        .hero h1 {
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 1;          /* was 0.9 */
+    margin-bottom: 25px;     /* NEW */
+}
+.purpose-journey {
+    min-height: 120vh;
+    padding: 120px 5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+}
+
+.pj-block {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.pj-label {
+    font-size: 2rem;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.pj-content h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+}
+
+.pj-content p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    opacity: 0.65;
+    max-width: 750px;
+    margin-bottom: 18px;
+}
+
+.pj-divider {
+    height: 1px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.15),
+        transparent
+    );
+}
+
+        .float-item {
+            position: absolute;
+            background: var(--glass-white);
+            padding: 12px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- MARQUEE --- */
+        .marquee { width: 100%; overflow: hidden; background: var(--accent); padding: 25px 0; display: flex; }
+        .marquee-content { display: flex; white-space: nowrap; font-weight: 900; font-size: 3vw; color: #000; text-transform: uppercase; }
+
+        /* --- REVEAL SECTION --- */
+        .reveal-container {     position: relative;
+    background: var(--bg-dark);
+    overflow: hidden; /* 👈 IMPORTANT */ }
+        .reveal-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 150vmax; height: 150vmax;
+            background: var(--bg-light);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .reveal-content { position: relative; z-index: 2; color: var(--text-dark); opacity: 0; width: 100%; max-width: 1200px; margin: 0 auto; }
+
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 50px; }
+        .card { background: rgba(0,0,0,0.04); padding: 40px; border-radius: 24px; text-align: left; border: 1px solid rgba(0,0,0,0.05); }
+
+        /* --- HORIZONTAL --- */
+        .h-wrap {
+    display: flex;
+    width: calc(100vw * 4); /* number of panels */
+    height: 100svh;         /* real viewport height */
+}
+.h-panel {
+    width: 100vw;
+    height: 100svh;
+
+    display: flex;
+    align-items: center;      /* vertical center */
+    justify-content: center;  /* horizontal center */
+
+    text-align: center;       /* center text itself */
+}
+
+        .big-stat { font-size: 15vw; font-weight: 800; line-height: 0.8; }
+
+        /* --- NEW: VENTURE INFO SECTION --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 100px;
+            max-width: 1200px;
+            text-align: left;
+            margin: 100px 0;
+        }
+        .info-item h4 { color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .info-item p { font-size: 1.2rem; opacity: 0.8; }
+
+        /* --- NEW: FOOTER --- */
+        footer {
+            background: #000;
+            padding: 100px 5vw 50px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .footer-col h5 { margin-bottom: 25px; font-size: 1.1rem; color: var(--accent); }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; opacity: 0.6; transition: 0.3s; cursor: pointer; }
+        .footer-col ul li:hover { opacity: 1; color: var(--accent); }
+        .footer-bottom {
+            margin-top: 100px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            opacity: 0.4;
+            font-size: 0.8rem;
+        }
+
+        /* --- UTILS --- */
+        .mesh-bg { position: fixed; inset: 0; z-index: -1; background: #000; overflow: hidden; }
+        .orb {
+    position: absolute;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(
+        circle,
+        rgba(30, 58, 138, 0.25) 0%,   /* navy glow */
+        transparent 70%
+    );
+    filter: blur(90px);
+}
+
+.team-contact {
+    padding: 140px 5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 120px;
+}
+
+.team-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.team-row.reverse {
+    grid-template-columns: 1fr 1.2fr;
+}
+
+.team-image {
+    height: 420px;
+    border-radius: 28px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* later you’ll add background-image here */
+.team-image.left {}
+.team-image.right {}
+
+.team-info h3 {
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 10px;
+}
+
+.team-info .name {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.role-desc {
+    opacity: 0.65;
+    line-height: 1.6;
+    max-width: 420px;
+}
+
+.contact-box {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+    padding-top: 80px;
+}
+.h-panel {
+    width: 100vw;
+    height: 100svh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+.horizontal-outer {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.panel-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+
+.contact-box h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 20px;
+}
+
+.contact-box p {
+    opacity: 0.7;
+    margin-bottom: 35px;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 1.1rem;
+}
+
+.contact-links a {
+    color: var(--accent-solid);
+    text-decoration: none;
+    font-weight: 600;
+}
+.impact-panel p {
+    color: #0a1025;
+    opacity: 0.7;
+}
+
+.impact-panel .big-stat {
+    color: #0a1025;
+}
+
+
+        body.light-mode header { background: rgba(0,0,0,0.05); color: var(--text-dark); border-color: rgba(0,0,0,0.1); }
+        body.light-mode .btn-cta { background: #000; color: #fff; }
+    </style>
+
+<!--AUTO GENERATED BY CODVERTER.COM-->
+<script src="scripts.js"></script>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+
+    <div class="mesh-bg">
+        <div class="orb" id="orb1" style="top: -10%; left: -10%;"></div>
+        <div class="orb" id="orb2" style="bottom: -10%; right: -10%;"></div>
+    </div>
+
+    <header id="navbar">
+        <div class="logo">axeon.</div>
+        <nav>
+            <a href="#services">Solutions</a>
+            <a href="#growth">Growth</a>
+            <a href="#vision">Vision</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <a href="#" class="btn-cta">Book a Demo</a>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="float-item" style="top: 25%; left: 10%;">SEO +140%</div>
+            <div class="float-item" style="bottom: 30%; right: 15%;">ROAS 4.5x</div>
+            <div class="float-item" style="top: 35%; right: 10%;">Conversion Optimized</div>
+            
+            <p style="text-transform: uppercase; letter-spacing: 4px; color: var(--accent); font-weight: 600; font-size: 0.8rem;">The Future of Marketing</p>
+            <h1 class="reveal-text">Scale your<br>Venture with<br>Intelligence.</h1>
+            <p class="hero-sub" style="opacity: 0.6; max-width: 550px; font-size: 1.1rem;">We bridge the gap between human creativity and algorithmic precision to dominate the digital landscape.</p>
+        </section>
+
+        <div class="marquee">
+            <div class="marquee-content">
+                THINK CREATIVE • THINK AXEON • THINK CREATIVE • THINK AXEON • THINK CREATIVE • THINK AXEON • THINK CREATIVE • THINK AXEON • THINK CREATIVE • THINK AXEON •THINK CREATIVE • THINK AXEON • THINK CREATIVE • THINK AXEON • THINK CREATIVE • THINK AXEON •
+            </div>
+        </div>
+
+        <div class="reveal-container">
+            <div class="reveal-circle" id="circle"></div>
+            <section id="services">
+                <div class="reveal-content">
+                    <h2 style="font-size: 4rem; letter-spacing: -2px; line-height: 1;">Marketing Ecosystem</h2>
+                    <div class="card-grid">
+                        <div class="card"><h3>Performance Lab</h3><p>Aggressive scaling through data-driven ad spend.</p></div>
+                        <div class="card"><h3>Creative Studio</h3><p>High-converting assets designed to stop the scroll.</p></div>
+                        <div class="card"><h3>Automation</h3><p>AI-powered funnels that nurture leads 24/7.</p></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+       <section class="purpose-journey">
+    <div class="pj-block fade-item">
+        <div class="pj-label">Purpose</div>
+        <div class="pj-content">
+            <h2>To Engineer Intelligent Growth</h2>
+            <p>
+               We exist to remove guesswork from growth. Axeon combines human creativity with algorithmic precision to build systems that scale with clarity, not chaos.
+
+Every strategy we design is rooted in data, refined through experimentation, and optimized for long-term compounding value. We don’t chase trends—we build frameworks that adapt, learn, and perform over time.
+
+Our commitment is simple: transparent execution, measurable outcomes, and sustainable growth that lasts beyond short-term wins.
+            </p>
+            <p>
+                Our focus is simple: clarity, performance, and long-term value.
+            </p>
+        </div>
+    </div>
+
+    <div class="pj-divider"></div>
+
+    <div class="pj-block fade-item">
+        <div class="pj-label">Journey</div>
+        <div class="pj-content">
+            <h2>From Experiments to Scalable Systems</h2>
+            <p>
+                Axeon began as a performance-focused growth lab—testing ideas rapidly, isolating signal from noise, and learning at speed. What worked repeatedly evolved into structured, repeatable systems.
+
+As our methodology matured, so did our scope. Today, we partner with ambitious teams to design and deploy intelligent growth engines across platforms, markets, and industries.
+
+Our journey is defined by continuous refinement—where every iteration makes the system stronger, smarter, and more resilient.
+            </p>
+        </div>
+    </div>
+</section>
+
+
+        <div class="horizontal-outer">
+    <div class="h-wrap" id="h-scroll">
+
+        <div class="h-panel">
+            <div class="panel-content">
+                <p>Market Share</p>
+                <span class="big-stat">92%</span>
+            </div>
+        </div>
+
+        <div class="h-panel impact-panel" style="background: #e9e9e7;">
+    <div class="panel-content">
+        <p>Global Impact</p>
+        <span class="big-stat">300k</span>
+    </div>
+</div>
+
+
+        <div class="h-panel" style="background: var(--accent);">
+            <div class="panel-content">
+                <p>Profitability</p>
+                <span class="big-stat">$2.4B</span>
+            </div>
+        </div>
+
+        <div class="h-panel" style="background: #000; color: white;">
+            <div class="panel-content">
+                <h2 style="font-size: 5vw;">Ready to start?</h2>
+                <a href="#contact"
+                   style="font-size: 1.5rem; color: var(--accent); text-decoration: none; border-bottom: 2px solid;">
+                    Let's Talk →
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<section class="team-contact">
+
+    <div class="team-row fade-item">
+        <div class="team-image left"></div>
+        <div class="team-info">
+            <h3>Founder</h3>
+            <p class="name">--</p>
+            <p class="role-desc">
+                Vision, systems architecture, and long-term strategy.
+            </p>
+        </div>
+    </div>
+
+    <div class="team-row reverse fade-item">
+        <div class="team-image right"></div>
+        <div class="team-info">
+            <h3>Co-Founder</h3>
+            <p class="name">—</p>
+            <p class="role-desc">
+                Operations, partnerships, and execution oversight.
+            </p>
+        </div>
+    </div>
+
+    <div class="team-row fade-item">
+        <div class="team-image left"></div>
+        <div class="team-info">
+            <h3>Design Head</h3>
+            <p class="name">—</p>
+            <p class="role-desc">
+                Visual systems, brand language, and creative direction.
+            </p>
+        </div>
+    </div>
+
+    <div class="team-row reverse fade-item">
+        <div class="team-image right"></div>
+        <div class="team-info">
+            <h3>Marketing Head</h3>
+            <p class="name">—</p>
+            <p class="role-desc">
+                Performance strategy, funnels, and growth experimentation.
+            </p>
+        </div>
+    </div>
+
+    <div class="team-row fade-item">
+        <div class="team-image left"></div>
+        <div class="team-info">
+            <h3>Web Dev Head</h3>
+            <p class="name">—</p>
+            <p class="role-desc">
+                Frontend systems, performance, and technical execution.
+            </p>
+        </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="contact-box fade-item">
+        <h2>Let’s Build Something Serious</h2>
+        <p>
+            If you’re looking for intelligent, scalable growth—not noise—
+            we should talk.
+        </p>
+
+        <div class="contact-links">
+            <a href="mailto:axeon.co.in@gmail.com">axeon.co.in@gmail.com</a>
+            <span>•</span>
+            <a href="#contact">Book a Call</a>
+        </div>
+    </div>
+
+</section>
+
+
+        <section id="vision" style="background: #000;">
+            <div class="vision-box" style="opacity: 0;">
+                <h2 style="font-size: clamp(2rem, 5vw, 4rem); margin-bottom: 30px;">"We don't just follow trends.<br>We engineer them."</h2>
+                
+                <div class="info-grid">
+                    <div class="info-item reveal-item">
+                        <h4>Our Venture</h4>
+                        <p>Axeon is a hybrid intelligence collective. We don't just buy ads; we build autonomous growth engines for the next generation of unicorns.</p>
+                    </div>
+                    <div class="info-item reveal-item">
+                        <h4>Our Method</h4>
+                        <p>Combining neural-network data analysis with high-art creative direction. 100% transparent, 100% performance-based.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 20px;">axeon.</div>
+                    <p style="opacity: 0.5; max-width: 300px;">Redefining the digital landscape through creative intelligence and aggressive scaling.</p>
+                </div>
+                <div class="footer-col">
+                    <h5>About</h5>
+                    <ul>
+                        <li>Our Story</li>
+                        <li>Case Studies</li>
+                        <li>The Lab</li>
+                        <li>Careers</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Services</h5>
+                    <ul>
+                        <li>Paid Media</li>
+                        <li>Creative Strategy</li>
+                        <li>AI Automations</li>
+                        <li>SEO Dominance</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Contact</h5>
+                    <ul>
+                        <li id="email-text">hello@axeon.ai</li>
+                        <li>+91 91873 26401<li>
+                        <li>Bangalore, Karnataka</li>
+                        <li>India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Axeon Intelligence. All rights reserved.</p>
+                <p>Privacy Policy // Terms of Service</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const lenis = new Lenis();
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Magnetic Nav
+        const nav = document.querySelector("#navbar");
+        document.addEventListener("mousemove", (e) => {
+            const { clientX, clientY } = e;
+            const x = (clientX - window.innerWidth / 2) * 0.015;
+            const y = (clientY - window.innerHeight / 2) * 0.015;
+            gsap.to(nav, { x: x, y: y, duration: 1.2, ease: "power2.out" });
+        });
+
+        // 2. Hero Entrance
+        const heroTl = gsap.timeline({ defaults: { ease: "power4.out" }});
+        heroTl.from(".reveal-text", { y: 60, opacity: 0, duration: 1.5, stagger: 0.2 })
+              .from(".hero-sub", { opacity: 0, y: 20, duration: 1 }, "-=1")
+              .from(".float-item", { scale: 0, opacity: 0, stagger: 0.1, duration: 0.8 }, "-=0.8");
+
+        // 3. Floating Loop
+        gsap.to(".float-item", {
+            y: "random(-15, 15)",
+            x: "random(-10, 10)",
+            duration: "random(2, 3)",
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+
+        // 4. Marquee
+        gsap.to(".marquee-content", { xPercent: -50, repeat: -1, duration: 15, ease: "none" });
+
+        // 5. Circle Reveal
+        const circleTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: ".reveal-container",
+                start: "top center",
+                end: "bottom top",
+                scrub: 0.5,
+                onToggle: self => document.body.classList.toggle('light-mode', self.isActive)
+            }
+        });
+        circleTl.to("#circle", { scale: 1 }).to(".reveal-content", { opacity: 1, y: -30 }, "-=0.5");
+
+        // 6. Horizontal Scroll
+       const hWrap = document.querySelector("#h-scroll");
+
+gsap.to(hWrap, {
+  x: () => -(hWrap.scrollWidth - window.innerWidth),
+  ease: "none",
+  scrollTrigger: {
+    trigger: ".horizontal-outer",
+    start: "top top",
+    pin: true,
+    scrub: 1,
+    anticipatePin: 1,
+    invalidateOnRefresh: true,
+    end: () => "+=" + (hWrap.scrollWidth - window.innerWidth)
+  }
+});
+
+
+
+
+        // 7. Vision & New Venture Info Reveal
+        const visionTl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#vision",
+                start: "top 70%",
+            }
+        });
+        visionTl.to(".vision-box", { opacity: 1, y: -20, duration: 1 })
+
+                .from(".reveal-item", { opacity: 0, y: 30, stagger: 0.3, duration: 1 }, "-=0.5");
+
+        // 8. Footer Reveal Animation
+        gsap.from(".footer-col", {
+            opacity: 0,
+            y: 50,
+            stagger: 0.1,
+            duration: 1,
+            scrollTrigger: {
+                trigger: "footer",
+                start: "top 90%",
+            }
+        });
+
+        // 9. Interactive Orbs
+        gsap.to("#orb1", { x: "15vw", y: "20vh", duration: 10, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        gsap.to("#orb2", { x: "-10vw", y: "-15vh", duration: 12, repeat: -1, yoyo: true, ease: "sine.inOut" });
+window.addEventListener("load", () => {
+    ScrollTrigger.refresh(true);
+});
+
+    </script>
+</body>
+</html>
